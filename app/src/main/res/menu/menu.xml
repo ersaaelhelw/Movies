@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popular"
+        android:checkable="false"
+        android:title="Most popular"
+
+        />
+    <item
+        android:id="@+id/top_rated"
+        android:checkable="false"
+        android:title="Highest Rate"
+
+
+        />
+    <item
+        android:id="@+id/favorite"
+        android:checkable="false"
+        android:title="Favorite"
+
+
+        />
+
+</menu>
