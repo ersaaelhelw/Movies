@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.manara.movies.View_Model.Favorate_Adapter;
@@ -22,17 +24,25 @@ public class Favorite_Activity extends AppCompatActivity implements  Favorate_Ad
     Context context=this;
     List<String>posterpath=new ArrayList<>();
     List<Favorite_Table> movieFavouratesArrayList = new ArrayList<>();
+    public static int index = -1;
+    public static int top = -1;
+    GridLayoutManager gridLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_);
+        gridLayoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        if(index != -1)
+        {
+            gridLayoutManager.scrollToPositionWithOffset( index, top);
+        }
         View_Model_Movies viewModel= ViewModelProviders.of(this).get(View_Model_Movies.class);
         viewModel.getFavourate().observe(this, new Observer<List<Favorite_Table>>() {
             @Override
@@ -46,7 +56,7 @@ public class Favorite_Activity extends AppCompatActivity implements  Favorate_Ad
                     }
                     FavoratePoster=findViewById(R.id.favorite_poster);
                     Favorate_Adapter favorate_adapter=new Favorate_Adapter(posterpath,context,Favorite_Activity.this);
-                    FavoratePoster.setLayoutManager(new GridLayoutManager(context, 2,GridLayoutManager.VERTICAL,false));
+                    FavoratePoster.setLayoutManager(gridLayoutManager);
                     FavoratePoster.setAdapter(favorate_adapter);
 
                 }
@@ -54,6 +64,15 @@ public class Favorite_Activity extends AppCompatActivity implements  Favorate_Ad
         });
     }
 
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        //read current recyclerview position
+        index = gridLayoutManager.findFirstVisibleItemPosition();
+        View v = FavoratePoster.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - FavoratePoster.getPaddingTop());
+    }
     @Override
     public void onListItemClick(int clickedItemIndex) {
 

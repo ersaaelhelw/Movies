@@ -18,6 +18,7 @@ import java.util.List;
 
 public class Movies_Adapter extends RecyclerView.Adapter <RecyclerView.ViewHolder>   {
     Context context;
+    static  int position;
     public List<Movie> movieList=new ArrayList<>();
 
     final private ListItemClickListener mOnClickListener;

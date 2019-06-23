@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.manara.movies.View_Model.Favorate_Adapter;
@@ -32,6 +33,10 @@ public class MainActivity extends AppCompatActivity implements Movies_Adapter.Li
     Context context=this;
     List<Movie> movie=new ArrayList<>();
     RecyclerView MoviePoster ;
+    public static int index = -1;
+    public static int top = -1;
+    GridLayoutManager gridLayoutManager;
+    LinearLayoutManager mLayoutManager;
 
     String t="popular";
     SetData setData=new SetData();
@@ -41,22 +46,29 @@ public class MainActivity extends AppCompatActivity implements Movies_Adapter.Li
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        gridLayoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
         setTitle("Pop Movies");
         if (savedInstanceState!=null)
         {
+            int x= (int) savedInstanceState.get("index");
+
             if (savedInstanceState.get("query").equals("popular"))
             {
                 new SetData().execute();
+
 
             }
             else
             {
                 t="top_rated";
                 new SetData().execute();
+
+
             }
         }
         else {
             new SetData().execute();
+
         }}
 
     @Override
@@ -100,10 +112,12 @@ public class MainActivity extends AppCompatActivity implements Movies_Adapter.Li
             super.onPostExecute(aVoid);
             MoviePoster=findViewById(R.id.movie_poster);
             Movies_Adapter movies_adapter=new Movies_Adapter(movie,context, MainActivity.this);
-            MoviePoster.setLayoutManager(new GridLayoutManager(context, 2,GridLayoutManager.VERTICAL,false));
+            MoviePoster.setLayoutManager(gridLayoutManager);
+
             MoviePoster.setAdapter(movies_adapter);
 
-
+//
+//
         }
 
 
@@ -113,6 +127,30 @@ public class MainActivity extends AppCompatActivity implements Movies_Adapter.Li
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("query",t);
+        outState.putInt("index",index);
+
+
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        //read current recyclerview position
+        index = gridLayoutManager.findFirstVisibleItemPosition();
+        View v = MoviePoster.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - MoviePoster.getPaddingTop());
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        //set recyclerview position
+        if(index != -1)
+        {
+            gridLayoutManager.scrollToPositionWithOffset( index, top);
+        }
     }
 
 

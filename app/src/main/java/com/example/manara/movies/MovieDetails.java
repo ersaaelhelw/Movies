@@ -144,14 +144,14 @@ public class MovieDetails extends AppCompatActivity implements LoaderManager.Loa
                             database.taskDao().Addfavorite(favorite_table);
                         }
                     });
-                    Toast mToast = Toast.makeText(MovieDetails.this, "film Added to Favourates", Toast.LENGTH_SHORT);
+                    Toast mToast = Toast.makeText(MovieDetails.this, "Film Added to Favorites", Toast.LENGTH_SHORT);
                     mToast.show();
-                    favorite.setText("remove from Favorite");
+                    favorite.setText("Remove From Favorite");
                 }
                 else {
                     new DeleteFavAsyncTask(database.taskDao()).execute(currentFav);
                     favorite.setText("ADD To Favorite");
-                    Toast mToast = Toast.makeText(MovieDetails.this, "deleted from Favourites", Toast.LENGTH_SHORT);
+                    Toast mToast = Toast.makeText(MovieDetails.this, "Deleted from Favourites", Toast.LENGTH_SHORT);
                     mToast.show();}
             }
         });
